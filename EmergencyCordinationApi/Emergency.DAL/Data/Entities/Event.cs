@@ -26,4 +26,11 @@ namespace Emergency.DAL.Data.Entities
         public virtual ICollection<Supplies> Supplies { get; set; }
         public virtual ICollection<Volunteer> Volunteer { get; set; }
     }
+
+    public enum EventType
+    {
+        EarthQuake = 1,
+        Fire = 2,
+        Flood = 3
+    }
 }
