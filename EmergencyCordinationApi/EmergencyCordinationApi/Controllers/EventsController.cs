@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Emergency.DAL.Data;
 using Emergency.DAL.Data.Entities;
+using EmergencyCordinationApi.Models.ViewModels;
 
 namespace EmergencyCordinationApi.Controllers
 {
@@ -23,16 +24,16 @@ namespace EmergencyCordinationApi.Controllers
 
         // GET: api/Events
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Event>>> GetEvent()
+        public async Task<ActionResult<IEnumerable<EventListViewModel>>> GetEvent()
         {
-            return await _context.Event.ToListAsync();
+            return await _context.Event.Select(EventListViewModel.Map).ToListAsync();
         }
 
         // GET: api/Events/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Event>> GetEvent(Guid id)
+        public async Task<ActionResult<EventDetailsViewModel>> GetEvent(Guid id)
         {
-            var @event = await _context.Event.FindAsync(id);
+            var @event = await _context.Event.Where(z=>z.Id==id).Select(EventDetailsViewModel.Map).SingleOrDefaultAsync();
 
             if (@event == null)
             {

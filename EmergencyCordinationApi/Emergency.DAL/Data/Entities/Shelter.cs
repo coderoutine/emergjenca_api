@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Emergency.DAL.Data.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace Emergency.DAL.Data.Entities
@@ -11,7 +12,7 @@ namespace Emergency.DAL.Data.Entities
         }
 
         public Guid Id { get; set; }
-        public int Type { get; set; }
+        public ShelterType Type { get; set; }
         public int? Capacity { get; set; }
         public string City { get; set; }
         public string Country { get; set; }

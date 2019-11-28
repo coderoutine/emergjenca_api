@@ -63,8 +63,14 @@ namespace Emergency.DAL.Data
                 entity.Property(e => e.Country)
                     .IsRequired()
                     .HasMaxLength(255);
+                entity.Property(e => e.Lat)
+                    .IsRequired()
+                    .HasMaxLength(25);
+                entity.Property(e => e.Lng)
+                 .IsRequired()
+                 .HasMaxLength(25);
 
-                entity.Property(e => e.Descrption).IsRequired();
+                entity.Property(e => e.Description).IsRequired();
 
                 entity.Property(e => e.Time).HasColumnType("datetime");
             });
