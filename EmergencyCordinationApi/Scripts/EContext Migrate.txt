@@ -1,2 +1,15 @@
+
+Add migration for EContext
 dotnet ef migrations add InitialMigration --project "Emergency.DAL" --startup-project "EmergencyCordinationApi"  --context EContext
+
+Update Databaes for EContext
 dotnet ef database update --project "Emergency.DAL" --startup-project "EmergencyCordinationApi" --context EContext
+
+Add migration for IdentityContext
+dotnet ef migrations add InitialMigration --project "EmergencyCordinationApi"  --startup-project "EmergencyCordinationApi"  --context IdentityDBContext
+
+Update Databaes for EContext
+dotnet ef database update --project "EmergencyCordinationApi" --startup-project "EmergencyCordinationApi" --context IdentityDBContext
+
+
+
