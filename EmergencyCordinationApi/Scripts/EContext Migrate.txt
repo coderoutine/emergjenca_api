@@ -1,0 +1,2 @@
+dotnet ef migrations add InitialMigration --project "Emergency.DAL" --startup-project "EmergencyCordinationApi"  --context EContext
+dotnet ef database update --project "Emergency.DAL" --startup-project "EmergencyCordinationApi" --context EContext
