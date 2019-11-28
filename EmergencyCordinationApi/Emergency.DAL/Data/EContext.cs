@@ -30,7 +30,7 @@ namespace Emergency.DAL.Data
             {
                 entity.ToTable("Contact Person");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Email).HasMaxLength(255);
 
@@ -54,7 +54,7 @@ namespace Emergency.DAL.Data
 
             modelBuilder.Entity<Event>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.City)
                     .IsRequired()
@@ -97,7 +97,7 @@ namespace Emergency.DAL.Data
 
             modelBuilder.Entity<Supplies>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Address).HasMaxLength(255);
 
@@ -119,7 +119,7 @@ namespace Emergency.DAL.Data
 
             modelBuilder.Entity<Volunteer>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Email).HasMaxLength(255);
 
