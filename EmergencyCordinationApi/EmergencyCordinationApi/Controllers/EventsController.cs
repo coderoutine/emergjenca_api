@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Emergency.DAL.Data;
 using Emergency.DAL.Data.Entities;
 using EmergencyCordinationApi.Models.ViewModels;
+using EmergencyCordinationApi.DataFilters;
 
 namespace EmergencyCordinationApi.Controllers
 {
@@ -24,9 +25,10 @@ namespace EmergencyCordinationApi.Controllers
 
         // GET: api/Events
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EventListViewModel>>> GetEvent()
+        public async Task<ActionResult<IEnumerable<EventListViewModel>>> GetEvent([FromQuery]EventFilter filter=null)
         {
-            return await _context.Event.Select(EventListViewModel.Map).ToListAsync();
+            if (filter == null) filter = new EventFilter();
+            return await _context.Event.Where(filter.Filter).Select(EventListViewModel.Map).ToListAsync();
         }
 
         // GET: api/Events/5

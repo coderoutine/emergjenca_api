@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Emergency.DAL.Data;
 using Emergency.DAL.Data.Entities;
+using EmergencyCordinationApi.DataFilters;
 
 namespace EmergencyCordinationApi.Controllers
 {
@@ -23,9 +24,10 @@ namespace EmergencyCordinationApi.Controllers
 
         // GET: api/ContactPersons
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ContactPerson>>> GetContactPerson()
+        public async Task<ActionResult<IEnumerable<ContactPerson>>> GetContactPerson([FromQuery] ContactPersonFilter filter = null)
         {
-            return await _context.ContactPerson.ToListAsync();
+            if (filter == null) filter = new ContactPersonFilter();
+            return await _context.ContactPerson.Where(filter.Filter).ToListAsync();
         }
 
         // GET: api/ContactPersons/5
