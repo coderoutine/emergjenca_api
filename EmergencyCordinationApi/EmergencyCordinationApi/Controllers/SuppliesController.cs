@@ -24,9 +24,9 @@ namespace EmergencyCordinationApi.Controllers
 
         // GET: api/Supplies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Supplies>>> GetSupplies([FromQuery] SupliesPersonFilter filter=null)
+        public async Task<ActionResult<IEnumerable<Supplies>>> GetSupplies([FromQuery] SupliesFilter filter=null)
         {
-            if (filter == null) filter = new SupliesPersonFilter();
+            if (filter == null) filter = new SupliesFilter();
             return await _context.Supplies.Where(filter.Filter).ToListAsync();
         }
 

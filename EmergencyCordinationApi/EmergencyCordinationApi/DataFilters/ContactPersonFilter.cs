@@ -11,13 +11,13 @@ namespace EmergencyCordinationApi.DataFilters
     public class ContactPersonFilter
     {
  
-        public IEnumerable<Guid> Events { get; set; }
+        public IEnumerable<Guid> Shelters { get; set; }
 
         internal Expression<Func<ContactPerson, bool>> Filter => Filter_Func();
         private Expression<Func<ContactPerson, bool>> Filter_Func()
         {
             var predicate = PredicateBuilder.True<ContactPerson>();
-            if (Events != null && Events.Any()) predicate = predicate.And(z => Events.Contains(z.EventId));
+            if (Shelters != null && Shelters.Any()) predicate = predicate.And(z => Shelters.Contains(z.ShelterId));
             return predicate;
         }
     }
