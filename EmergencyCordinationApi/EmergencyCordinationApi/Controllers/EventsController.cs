@@ -9,6 +9,7 @@ using Emergency.DAL.Data;
 using Emergency.DAL.Data.Entities;
 using EmergencyCordinationApi.Models.ViewModels;
 using EmergencyCordinationApi.DataFilters;
+using EmergencyCordinationApi.Services;
 
 namespace EmergencyCordinationApi.Controllers
 {
@@ -17,10 +18,12 @@ namespace EmergencyCordinationApi.Controllers
     public class EventsController : ControllerBase
     {
         private readonly EContext _context;
-
-        public EventsController(EContext context)
+        INotificationService _notificationService;
+        public EventsController(EContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
+
         }
 
         // GET: api/Events
@@ -73,7 +76,7 @@ namespace EmergencyCordinationApi.Controllers
                     throw;
                 }
             }
-
+            _notificationService.NotifyAll(NotificationType.EventUpdate);
             return NoContent();
         }
 
@@ -99,7 +102,7 @@ namespace EmergencyCordinationApi.Controllers
                     throw;
                 }
             }
-
+            _notificationService.NotifyAll(NotificationType.EventUpdate);
             return CreatedAtAction("GetEvent", new { id = @event.Id }, @event);
         }
 
@@ -115,7 +118,7 @@ namespace EmergencyCordinationApi.Controllers
 
             _context.Event.Remove(@event);
             await _context.SaveChangesAsync();
-
+            _notificationService.NotifyAll(NotificationType.EventUpdate);
             return @event;
         }
 
