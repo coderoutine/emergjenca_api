@@ -19,7 +19,9 @@ namespace Emergency.DAL.Data.Entities
         public string Address { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Location { get; set; }
+
+        public string Lat { get; set; }
+        public string Lng { get; set; }
         public Guid EventId { get; set; }
 
         public virtual Event Event { get; set; }

@@ -12,6 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Emergency.DAL.Data;
 using Microsoft.OpenApi.Models;
+using EmergencyCordinationApi.Services;
+using EmergencyCordinationApi.Hubs;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace EmergencyCordinationApi
 {
@@ -43,6 +47,13 @@ namespace EmergencyCordinationApi
                 .AddIdentityServerJwt();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddSignalR().AddJsonProtocol(options => {
+                options.PayloadSerializerOptions = new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = null
+                };
+            });
+            services.AddTransient<INotificationService, NotificationService>();
             //CORS Config
             services.AddCors();
             // Register the Swagger generator, defining 1 or more Swagger documents
@@ -69,7 +80,6 @@ namespace EmergencyCordinationApi
 
             //CORS Config
             app.UseCors(o => o.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
             app.UseSwagger();
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
@@ -94,6 +104,7 @@ namespace EmergencyCordinationApi
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                endpoints.MapHub<NotificationHub>("/api/notifications");
             });
         }
     }

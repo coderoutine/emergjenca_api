@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Emergency.DAL.Data;
 using Emergency.DAL.Data.Entities;
 using EmergencyCordinationApi.DataFilters;
+using EmergencyCordinationApi.Services;
 
 namespace EmergencyCordinationApi.Controllers
 {
@@ -16,10 +17,12 @@ namespace EmergencyCordinationApi.Controllers
     public class SheltersController : ControllerBase
     {
         private readonly EContext _context;
-
-        public SheltersController(EContext context)
+        INotificationService _notificationService;
+        public SheltersController(EContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
+
         }
 
         // GET: api/Shelters
@@ -40,7 +43,6 @@ namespace EmergencyCordinationApi.Controllers
             {
                 return NotFound();
             }
-
             return shelter;
         }
 
@@ -72,7 +74,7 @@ namespace EmergencyCordinationApi.Controllers
                     throw;
                 }
             }
-
+            _notificationService.NotifyAll(NotificationType.ShelterUpdate);
             return NoContent();
         }
 
@@ -98,7 +100,7 @@ namespace EmergencyCordinationApi.Controllers
                     throw;
                 }
             }
-
+            _notificationService.NotifyAll(NotificationType.ShelterUpdate);
             return CreatedAtAction("GetShelter", new { id = shelter.Id }, shelter);
         }
 
@@ -114,7 +116,7 @@ namespace EmergencyCordinationApi.Controllers
 
             _context.Shelter.Remove(shelter);
             await _context.SaveChangesAsync();
-
+            _notificationService.NotifyAll(NotificationType.ShelterUpdate);
             return shelter;
         }
 
