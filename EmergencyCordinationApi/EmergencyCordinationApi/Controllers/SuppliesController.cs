@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Emergency.DAL.Data;
 using Emergency.DAL.Data.Entities;
 using EmergencyCordinationApi.DataFilters;
+using EmergencyCordinationApi.Models.ViewModels;
 
 namespace EmergencyCordinationApi.Controllers
 {
@@ -24,17 +25,17 @@ namespace EmergencyCordinationApi.Controllers
 
         // GET: api/Supplies
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Supplies>>> GetSupplies([FromQuery] SupliesFilter filter=null)
+        public async Task<ActionResult<IEnumerable<SupplyViewModel>>> GetSupplies([FromQuery] SupliesFilter filter=null)
         {
             if (filter == null) filter = new SupliesFilter();
-            return await _context.Supplies.Where(filter.Filter).ToListAsync();
+            return await _context.Supplies.Where(filter.Filter).Select(SupplyViewModel.Map).ToListAsync();
         }
 
         // GET: api/Supplies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Supplies>> GetSupplies(Guid id)
+        public async Task<ActionResult<SupplyViewModel>> GetSupplies(Guid id)
         {
-            var supplies = await _context.Supplies.FindAsync(id);
+            var supplies = await _context.Supplies.Where(z=>z.Id==id).Select(SupplyViewModel.Map).SingleOrDefaultAsync();
 
             if (supplies == null)
             {
@@ -80,8 +81,30 @@ namespace EmergencyCordinationApi.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Supplies>> PostSupplies(Supplies supplies)
+        public async Task<ActionResult<SupplyViewModel>> PostSupplies(SuplieCreateViewModel data)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var supplies = new Supplies
+            {
+
+                Address = data.Address,
+                City = data.City,
+                Country = data.Country,
+                EventId = data.EventId,
+                Lat = data.Lat,
+                Lng = data.Lng,
+                Name = data.Name,
+                Description = data.Description,
+                Status = data.Status,
+                ContactPerson = data.ContactPersons?.Select(cp => new ContactPerson
+                {
+                    Email = cp.Email,
+                    FirstName = cp.FirstName,
+                    Phone = cp.Phone,
+                    LastName = cp.LastName,
+                }).ToList()
+            };
             _context.Supplies.Add(supplies);
             try
             {
@@ -99,7 +122,7 @@ namespace EmergencyCordinationApi.Controllers
                 }
             }
 
-            return CreatedAtAction("GetSupplies", new { id = supplies.Id }, supplies);
+            return await GetSupplies(supplies.Id);
         }
 
         // DELETE: api/Supplies/5

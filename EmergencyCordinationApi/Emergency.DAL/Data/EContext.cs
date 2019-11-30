@@ -50,6 +50,10 @@ namespace Emergency.DAL.Data
                     .WithMany(p => p.ContactPerson)
                     .HasForeignKey(d => d.ShelterId)
                     .HasConstraintName("FK_Contact Person_Shelter");
+                entity.HasOne(d => d.Supplie)
+                   .WithMany(p => p.ContactPerson)
+                   .HasForeignKey(d => d.SupplieId)
+                   .HasConstraintName("FK_Contact Person_Supplie");
             });
 
             modelBuilder.Entity<Event>(entity =>
@@ -105,12 +109,7 @@ namespace Emergency.DAL.Data
 
                 entity.Property(e => e.Name).HasMaxLength(255);
 
-                entity.HasOne(d => d.ContactPerson)
-                    .WithMany(p => p.Supplies)
-                    .HasForeignKey(d => d.ContactPersonId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Supplies_Contact Person");
-
+ 
                 entity.HasOne(d => d.Event)
                     .WithMany(p => p.Supplies)
                     .HasForeignKey(d => d.EventId)

@@ -9,35 +9,35 @@ using System.Threading.Tasks;
 
 namespace EmergencyCordinationApi.Models.ViewModels
 {
-   public class ShelterBaseModel
+    public class SupplieBaseModel
     {
-        [Required]
-        public ShelterType Type { get; set; }
-        public int? Capacity { get; set; }
-        [Required]
-        public string City { get; set; }
-        [Required]
-        public string Country { get; set; }
-        [Required]
-        public string Address { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
         public string Description { get; set; }
         [Required]
+        public string Address { get; set; }
+        [Required]
+        public string City { get; set; }
+        [Required]
+        public string Country { get; set; }
+        [Required]
         public string Lat { get; set; }
         [Required]
         public string Lng { get; set; }
         [Required]
+        public SupplyStatus Status { get; set; }
         public Guid EventId { get; set; }
-    }
-    public class ShelterCreateViewModel:ShelterBaseModel
-    {
-       
-        public IEnumerable<ShelterContanctPersonCreateModel> ContactPersons { get; set; }
 
     }
-    public class ShelterContanctPersonCreateModel
+    public class SuplieCreateViewModel:SupplieBaseModel
+    {
+
+      
+        public IEnumerable<SupplyContanctPersonCreateModel> ContactPersons { get; set; }
+
+    }
+    public class SupplyContanctPersonCreateModel
     {
         [Required]
         public string FirstName { get; set; }
@@ -46,39 +46,37 @@ namespace EmergencyCordinationApi.Models.ViewModels
         public string Phone { get; set; }
         public string Email { get; set; }
     }
-    public class ShelterContactPersonViewModel : ShelterContanctPersonCreateModel
+    public class SupplyContanctPersonViewModel : SupplyContanctPersonCreateModel
     {
         public Guid Id { get; set; }
-        public Guid ShelterId { get; set; }
+        public Guid SupplyId { get; set; }
     }
-    public class ShelterViewModel : ShelterBaseModel
+    public class SupplyViewModel: SupplieBaseModel
     {
         public Guid Id { get; set; }
-        public  IEnumerable<ShelterContactPersonViewModel> ContactPersons { get; set; }
-
-        public static Expression<Func<Shelter, ShelterViewModel>> Map => (s) => new ShelterViewModel
+        public  IEnumerable<SupplyContanctPersonViewModel> ContactPersons { get; set; }
+        public static Expression<Func<Supplies, SupplyViewModel>> Map => (s) => new SupplyViewModel
         {
             Id = s.Id,
             Address = s.Address,
-            Capacity = s.Capacity,
             City = s.City,
             Country = s.Country,
             Description = s.Description,
             Lat = s.Lat,
             Lng = s.Lng,
             Name = s.Name,
-            Type = s.Type,
+            Status = s.Status,
             EventId = s.EventId,
-            ContactPersons = s.ContactPerson.Select(cp => new ShelterContactPersonViewModel
+            ContactPersons = s.ContactPerson.Select(cp => new SupplyContanctPersonViewModel
             {
-                Id=cp.Id,
-             Email=cp.Email,
-             FirstName=cp.FirstName,
-            LastName=cp.LastName,
-         Phone=cp.Phone,
-         ShelterId=cp.ShelterId.Value
+                Id = cp.Id,
+                Email = cp.Email,
+                FirstName = cp.FirstName,
+                LastName = cp.LastName,
+                Phone = cp.Phone,
+                SupplyId = cp.SupplieId.Value
             })
         };
     }
-}
 
+}

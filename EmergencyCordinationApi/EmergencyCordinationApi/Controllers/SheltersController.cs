@@ -28,17 +28,17 @@ namespace EmergencyCordinationApi.Controllers
 
         // GET: api/Shelters
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Shelter>>> GetShelter([FromQuery]ShelterFilter filter)
+        public async Task<ActionResult<IEnumerable<ShelterViewModel>>> GetShelter([FromQuery]ShelterFilter filter)
         {
             if (filter == null) filter = new ShelterFilter();
-            return await _context.Shelter.Where(filter.Filter).ToListAsync();
+            return await _context.Shelter.Where(filter.Filter).Select(ShelterViewModel.Map).ToListAsync();
         }
 
         // GET: api/Shelters/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Shelter>> GetShelter(Guid id)
+        public async Task<ActionResult<ShelterViewModel>> GetShelter(Guid id)
         {
-            var shelter = await _context.Shelter.FindAsync(id);
+            var shelter = await _context.Shelter.Where(z => z.Id == id).Select(ShelterViewModel.Map).SingleOrDefaultAsync();
 
             if (shelter == null)
             {
@@ -83,7 +83,7 @@ namespace EmergencyCordinationApi.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Shelter>> PostShelter(ShelterCreateViewModel data)
+        public async Task<ActionResult<ShelterViewModel>> PostShelter(ShelterCreateViewModel data)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -126,7 +126,7 @@ namespace EmergencyCordinationApi.Controllers
                 }
             }
             _notificationService.NotifyAll(NotificationType.ShelterUpdate);
-            return CreatedAtAction("GetShelter", new { id = shelter.Id }, shelter);
+            return await GetShelter(shelter.Id);
         }
 
         // DELETE: api/Shelters/5

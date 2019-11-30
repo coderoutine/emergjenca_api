@@ -7,7 +7,6 @@ namespace Emergency.DAL.Data.Entities
     {
         public ContactPerson()
         {
-            Supplies = new HashSet<Supplies>();
         }
 
         public Guid Id { get; set; }
@@ -15,9 +14,10 @@ namespace Emergency.DAL.Data.Entities
         public string LastName { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
-        public Guid ShelterId { get; set; }
+        public Guid? ShelterId { get; set; }
+        public Guid? SupplieId { get; set; }
 
         public virtual Shelter Shelter { get; set; }
-        public virtual ICollection<Supplies> Supplies { get; set; }
+        public virtual Supplies Supplie { get; set; }
     }
 }
