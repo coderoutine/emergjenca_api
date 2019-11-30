@@ -9,6 +9,7 @@ using Emergency.DAL.Data;
 using Emergency.DAL.Data.Entities;
 using EmergencyCordinationApi.DataFilters;
 using EmergencyCordinationApi.Services;
+using EmergencyCordinationApi.Models.ViewModels;
 
 namespace EmergencyCordinationApi.Controllers
 {
@@ -82,8 +83,32 @@ namespace EmergencyCordinationApi.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Shelter>> PostShelter(Shelter shelter)
+        public async Task<ActionResult<Shelter>> PostShelter(ShelterCreateViewModel data)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var shelter = new Shelter
+            {
+                Address = data.Address,
+                Capacity = data.Capacity,
+                City = data.City,
+                Country = data.Country,
+                EventId = data.EventId,
+                Lat = data.Lat,
+                Lng = data.Lng,
+                Name = data.Name,
+                Description = data.Description,
+                Type = data.Type,
+                ContactPerson = data.ContactPersons?.Select(cp => new ContactPerson
+                {
+                    Email = cp.Email,
+                    FirstName = cp.FirstName,
+                    Phone = cp.Phone,
+                    LastName = cp.LastName,
+                }).ToList()
+            };
+
+
             _context.Shelter.Add(shelter);
             try
             {
