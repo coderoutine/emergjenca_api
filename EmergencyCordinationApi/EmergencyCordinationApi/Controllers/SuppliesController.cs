@@ -29,14 +29,16 @@ namespace EmergencyCordinationApi.Controllers
         public async Task<ActionResult<IEnumerable<SupplyViewModel>>> GetSupplies([FromQuery] SupliesFilter filter=null)
         {
             if (filter == null) filter = new SupliesFilter();
-            return await _context.Supplies.Where(filter.Filter).Select(SupplyViewModel.Map).ToListAsync();
+                    var map = SupplyViewModel.Map(CurrentUserId);
+            return await _context.Supplies.Where(filter.Filter).Select(map).ToListAsync();
         }
 
         // GET: api/Supplies/5
         [HttpGet("{id}")]
         public async Task<ActionResult<SupplyViewModel>> GetSupplies(Guid id)
         {
-            var supplies = await _context.Supplies.Where(z=>z.Id==id).Select(SupplyViewModel.Map).SingleOrDefaultAsync();
+            var map = SupplyViewModel.Map(CurrentUserId);
+            var supplies = await _context.Supplies.Where(z=>z.Id==id).Select(map).SingleOrDefaultAsync();
 
             if (supplies == null)
             {
@@ -90,7 +92,7 @@ namespace EmergencyCordinationApi.Controllers
 
             var supplies = new Supplies
             {
-                TenantId=CurrentUserId,
+                TenantId=CurrentUserId.Value,
                 Address = data.Address,
                 City = data.City,
                 Country = data.Country,

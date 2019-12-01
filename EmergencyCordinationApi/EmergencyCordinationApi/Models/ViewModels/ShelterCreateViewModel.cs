@@ -55,30 +55,38 @@ namespace EmergencyCordinationApi.Models.ViewModels
     {
         public Guid Id { get; set; }
         public  IEnumerable<ShelterContactPersonViewModel> ContactPersons { get; set; }
+        public bool CanEdit { get; private set; }
+        public bool CanDelete { get; private set; }
 
-        public static Expression<Func<Shelter, ShelterViewModel>> Map => (s) => new ShelterViewModel
+        public static Expression<Func<Shelter, ShelterViewModel>> Map(Guid? tenantId) 
         {
-            Id = s.Id,
-            Address = s.Address,
-            Capacity = s.Capacity,
-            City = s.City,
-            Country = s.Country,
-            Description = s.Description,
-            Lat = s.Lat,
-            Lng = s.Lng,
-            Name = s.Name,
-            Type = s.Type,
-            EventId = s.EventId,
-            ContactPersons = s.ContactPerson.Select(cp => new ShelterContactPersonViewModel
+          return (s)=> new ShelterViewModel
             {
-                Id=cp.Id,
-             Email=cp.Email,
-             FirstName=cp.FirstName,
-            LastName=cp.LastName,
-         Phone=cp.Phone,
-         ShelterId=cp.ShelterId.Value
-            })
-        };
+                Id = s.Id,
+                CanEdit= tenantId==s.TenantId,
+                CanDelete= tenantId==s.TenantId,
+              Address = s.Address,
+                Capacity = s.Capacity,
+                City = s.City,
+                Country = s.Country,
+                Description = s.Description,
+                Lat = s.Lat,
+                Lng = s.Lng,
+                Name = s.Name,
+                Type = s.Type,
+                EventId = s.EventId,
+                ContactPersons = s.ContactPerson.Select(cp => new ShelterContactPersonViewModel
+                {
+                    Id = cp.Id,
+                    Email = cp.Email,
+                    FirstName = cp.FirstName,
+                    LastName = cp.LastName,
+                    Phone = cp.Phone,
+                    ShelterId = cp.ShelterId.Value
+                })
+            };
+        }
+
     }
 }
 

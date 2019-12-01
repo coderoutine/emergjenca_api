@@ -32,14 +32,16 @@ namespace EmergencyCordinationApi.Controllers
         public async Task<ActionResult<IEnumerable<ShelterViewModel>>> GetShelter([FromQuery]ShelterFilter filter)
         {
             if (filter == null) filter = new ShelterFilter();
-            return await _context.Shelter.Where(filter.Filter).Select(ShelterViewModel.Map).ToListAsync();
+            var map = ShelterViewModel.Map(CurrentUserId);
+            return await _context.Shelter.Where(filter.Filter).Select(map).ToListAsync();
         }
 
         // GET: api/Shelters/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ShelterViewModel>> GetShelter(Guid id)
         {
-            var shelter = await _context.Shelter.Where(z => z.Id == id).Select(ShelterViewModel.Map).SingleOrDefaultAsync();
+            var map = ShelterViewModel.Map(CurrentUserId);
+            var shelter = await _context.Shelter.Where(z => z.Id == id).Select(map).SingleOrDefaultAsync();
 
             if (shelter == null)
             {
@@ -92,7 +94,7 @@ namespace EmergencyCordinationApi.Controllers
 
             var shelter = new Shelter
             {
-                TenantId= CurrentUserId,
+                TenantId= CurrentUserId.Value,
                 Address = data.Address,
                 Capacity = data.Capacity,
                 City = data.City,

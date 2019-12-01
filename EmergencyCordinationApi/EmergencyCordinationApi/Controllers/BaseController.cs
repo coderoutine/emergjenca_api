@@ -10,7 +10,16 @@ namespace EmergencyCordinationApi.Controllers
 {
     public class BaseController : ControllerBase
     {
-        public Guid CurrentUserId => Guid.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        public Guid? CurrentUserId
+        {
+            get
+            {
+                var parsed = Guid.TryParse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier), out Guid userId);
+                return parsed ? (Guid?)userId : null;
+
+            }
         }
     }
+}
+    
 

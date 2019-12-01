@@ -55,28 +55,36 @@ namespace EmergencyCordinationApi.Models.ViewModels
     {
         public Guid Id { get; set; }
         public  IEnumerable<SupplyContanctPersonViewModel> ContactPersons { get; set; }
-        public static Expression<Func<Supplies, SupplyViewModel>> Map => (s) => new SupplyViewModel
-        {
-            Id = s.Id,
-            Address = s.Address,
-            City = s.City,
-            Country = s.Country,
-            Description = s.Description,
-            Lat = s.Lat,
-            Lng = s.Lng,
-            Name = s.Name,
-            Status = s.Status,
-            EventId = s.EventId,
-            ContactPersons = s.ContactPerson.Select(cp => new SupplyContanctPersonViewModel
+        public bool CanEdit { get; private set; }
+        public bool CanDelete { get; private set; }
+
+        public static Expression<Func<Supplies, SupplyViewModel>> Map(Guid? tenantId) {
+
+            return (s) => new SupplyViewModel
             {
-                Id = cp.Id,
-                Email = cp.Email,
-                FirstName = cp.FirstName,
-                LastName = cp.LastName,
-                Phone = cp.Phone,
-                SupplyId = cp.SupplieId.Value
-            })
-        };
+                Id = s.Id,
+                CanEdit = tenantId == s.TenantId,
+                CanDelete = tenantId == s.TenantId,
+                Address = s.Address,
+                City = s.City,
+                Country = s.Country,
+                Description = s.Description,
+                Lat = s.Lat,
+                Lng = s.Lng,
+                Name = s.Name,
+                Status = s.Status,
+                EventId = s.EventId,
+                ContactPersons = s.ContactPerson.Select(cp => new SupplyContanctPersonViewModel
+                {
+                    Id = cp.Id,
+                    Email = cp.Email,
+                    FirstName = cp.FirstName,
+                    LastName = cp.LastName,
+                    Phone = cp.Phone,
+                    SupplyId = cp.SupplieId.Value
+                })
+            };
+        }
     }
 
 }
