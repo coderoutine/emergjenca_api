@@ -136,17 +136,18 @@ namespace EmergencyCordinationApi.Controllers
         // DELETE: api/Shelters/5
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<ActionResult<Shelter>> DeleteShelter(Guid id)
+        public async Task<ActionResult> DeleteShelter(Guid id)
         {
-            var shelter = await _context.Shelter.FindAsync(id);
+            var shelter = await _context.Shelter.Include(z=>z.ContactPerson).SingleOrDefaultAsync(z=>z.Id==id);
             if (shelter == null) return NotFound();
 
             if (shelter.TenantId != CurrentUserId) return Forbid();
 
+            _context.ContactPerson.RemoveRange(shelter.ContactPerson);
             _context.Shelter.Remove(shelter);
             await _context.SaveChangesAsync();
             _notificationService.NotifyAll(NotificationType.ShelterUpdate);
-            return shelter;
+            return Ok();
         }
 
         private bool ShelterExists(Guid id)

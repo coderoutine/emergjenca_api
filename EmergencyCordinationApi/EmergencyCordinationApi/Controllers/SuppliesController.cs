@@ -131,16 +131,16 @@ namespace EmergencyCordinationApi.Controllers
         // DELETE: api/Supplies/5
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<ActionResult<Supplies>> DeleteSupplies(Guid id)
+        public async Task<IActionResult> DeleteSupplies(Guid id)
         {
-            var supplies = await _context.Supplies.FindAsync(id);
+            var supplies = await _context.Supplies.Include(z=>z.ContactPerson).SingleOrDefaultAsync(z=>z.Id==id);
             if (supplies == null)   return NotFound();
             if (supplies.TenantId != CurrentUserId) return Forbid();
-
+            _context.ContactPerson.RemoveRange(supplies.ContactPerson);
             _context.Supplies.Remove(supplies);
             await _context.SaveChangesAsync();
 
-            return supplies;
+            return Ok();
         }
 
         private bool SuppliesExists(Guid id)
