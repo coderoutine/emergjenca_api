@@ -10,12 +10,13 @@ using Emergency.DAL.Data.Entities;
 using EmergencyCordinationApi.DataFilters;
 using EmergencyCordinationApi.Services;
 using EmergencyCordinationApi.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EmergencyCordinationApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SheltersController : ControllerBase
+    public class SheltersController : BaseController
     {
         private readonly EContext _context;
         INotificationService _notificationService;
@@ -51,13 +52,14 @@ namespace EmergencyCordinationApi.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutShelter(Guid id, Shelter shelter)
         {
             if (id != shelter.Id)
             {
                 return BadRequest();
             }
-
+            if (shelter.TenantId != CurrentUserId) return Forbid();
             _context.Entry(shelter).State = EntityState.Modified;
 
             try
@@ -83,12 +85,14 @@ namespace EmergencyCordinationApi.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<ShelterViewModel>> PostShelter(ShelterCreateViewModel data)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var shelter = new Shelter
             {
+                TenantId= CurrentUserId,
                 Address = data.Address,
                 Capacity = data.Capacity,
                 City = data.City,
@@ -131,13 +135,13 @@ namespace EmergencyCordinationApi.Controllers
 
         // DELETE: api/Shelters/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<Shelter>> DeleteShelter(Guid id)
         {
             var shelter = await _context.Shelter.FindAsync(id);
-            if (shelter == null)
-            {
-                return NotFound();
-            }
+            if (shelter == null) return NotFound();
+
+            if (shelter.TenantId != CurrentUserId) return Forbid();
 
             _context.Shelter.Remove(shelter);
             await _context.SaveChangesAsync();

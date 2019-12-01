@@ -81,7 +81,7 @@ namespace Emergency.DAL.Data
 
             modelBuilder.Entity<Shelter>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Address).HasMaxLength(255);
 

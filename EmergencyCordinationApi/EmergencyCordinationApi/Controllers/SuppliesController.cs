@@ -9,12 +9,13 @@ using Emergency.DAL.Data;
 using Emergency.DAL.Data.Entities;
 using EmergencyCordinationApi.DataFilters;
 using EmergencyCordinationApi.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EmergencyCordinationApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SuppliesController : ControllerBase
+    public class SuppliesController : BaseController
     {
         private readonly EContext _context;
 
@@ -49,13 +50,14 @@ namespace EmergencyCordinationApi.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutSupplies(Guid id, Supplies supplies)
         {
             if (id != supplies.Id)
             {
                 return BadRequest();
             }
-
+            if (supplies.TenantId != CurrentUserId) return Forbid();
             _context.Entry(supplies).State = EntityState.Modified;
 
             try
@@ -81,13 +83,14 @@ namespace EmergencyCordinationApi.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<SupplyViewModel>> PostSupplies(SuplieCreateViewModel data)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var supplies = new Supplies
             {
-
+                TenantId=CurrentUserId,
                 Address = data.Address,
                 City = data.City,
                 Country = data.Country,
@@ -127,13 +130,12 @@ namespace EmergencyCordinationApi.Controllers
 
         // DELETE: api/Supplies/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<Supplies>> DeleteSupplies(Guid id)
         {
             var supplies = await _context.Supplies.FindAsync(id);
-            if (supplies == null)
-            {
-                return NotFound();
-            }
+            if (supplies == null)   return NotFound();
+            if (supplies.TenantId != CurrentUserId) return Forbid();
 
             _context.Supplies.Remove(supplies);
             await _context.SaveChangesAsync();

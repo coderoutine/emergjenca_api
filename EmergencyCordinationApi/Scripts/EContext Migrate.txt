@@ -1,6 +1,6 @@
 
 Add migration for EContext
-dotnet ef migrations add Location --project "Emergency.DAL" --startup-project "EmergencyCordinationApi"  --context EContext
+dotnet ef migrations add TenantId --project "Emergency.DAL" --startup-project "EmergencyCordinationApi"  --context EContext
 
 Update Databaes for EContext
 dotnet ef database update --project "Emergency.DAL" --startup-project "EmergencyCordinationApi" --context EContext

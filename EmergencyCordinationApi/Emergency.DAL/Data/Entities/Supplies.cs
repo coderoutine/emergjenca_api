@@ -17,6 +17,7 @@ namespace Emergency.DAL.Data.Entities
         public SupplyStatus Status { get; set; }
         public Guid EventId { get; set; }
 
+        public Guid TenantId { get; set; }
 
         public virtual ICollection<ContactPerson> ContactPerson { get; set; }
         public virtual Event Event { get; set; }
