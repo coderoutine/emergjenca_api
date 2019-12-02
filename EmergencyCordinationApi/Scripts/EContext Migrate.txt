@@ -1,6 +1,6 @@
 
 Add migration for EContext
-dotnet ef migrations add Delete --project "Emergency.DAL" --startup-project "EmergencyCordinationApi"  --context EContext
+dotnet ef migrations add Relevancy --project "Emergency.DAL" --startup-project "EmergencyCordinationApi"  --context EContext
 
 Update Databaes for EContext
 dotnet ef database update --project "Emergency.DAL" --startup-project "EmergencyCordinationApi" --context EContext
