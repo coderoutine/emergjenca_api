@@ -12,7 +12,7 @@ namespace Emergency.DAL.Data.Entities
             Supplies = new HashSet<Supplies>();
             Volunteer = new HashSet<Volunteer>();
         }
-
+        
         public Guid Id { get; set; }
         public EventType Type { get; set; }
         public int Severity { get; set; }
@@ -24,6 +24,7 @@ namespace Emergency.DAL.Data.Entities
 
         public string Lat { get; set; }
         public string Lng { get; set; }
+        public bool IsStillRelevant { get; set; }
         public virtual ICollection<Shelter> Shelter { get; set; }
         public virtual ICollection<Supplies> Supplies { get; set; }
         public virtual ICollection<Volunteer> Volunteer { get; set; }

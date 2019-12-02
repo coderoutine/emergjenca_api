@@ -13,12 +13,14 @@ namespace EmergencyCordinationApi.DataFilters
     {
         public IEnumerable<EventType> Types { get; set; }
         public bool? Verified { get; set; }
+        public bool? Relevant { get; set; }
         internal Expression<Func<Event, bool>> Filter => Filter_Func();
         private Expression<Func<Event, bool>> Filter_Func()
         {
             var predicate = PredicateBuilder.True<Event>();
             if (Types != null && Types.Any()) predicate = predicate.And(z => Types.Contains(z.Type));
             if (Verified.HasValue) predicate = predicate.And(z => z.Verified == Verified);
+            if (Relevant.HasValue) predicate = predicate.And(z => z.IsStillRelevant == Relevant);
             return predicate;
         }
     }

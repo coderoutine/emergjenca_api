@@ -14,6 +14,7 @@ namespace EmergencyCordinationApi.Models.ViewModels
         public EventType Type { get; set; }
         public int Severity { get; set; }
         public DateTime? Time { get; set; }
+        public bool IsStillRelevant { get; set; }
         public bool Verified { get; set; }
         public string Description { get; set; }
         public string Country { get; set; }
@@ -32,7 +33,8 @@ namespace EmergencyCordinationApi.Models.ViewModels
             Country=e.Country,
             City=e.City,
             Lat=e.Lat,
-            Lng=e.Lng
+            Lng=e.Lng,
+            IsStillRelevant=e.IsStillRelevant
         };
     }
     public class EventDetailsViewModel

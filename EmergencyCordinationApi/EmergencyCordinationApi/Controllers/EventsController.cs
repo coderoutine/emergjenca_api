@@ -25,8 +25,13 @@ namespace EmergencyCordinationApi.Controllers
             _notificationService = notificationService;
 
         }
-
-        // GET: api/Events
+        [HttpGet]
+        [Route("relevant")]
+        public async Task<ActionResult<IEnumerable<EventListViewModel>>> GetEvent()
+        {
+            var filter = new EventFilter() { Relevant=true};
+            return await _context.Event.Where(filter.Filter).Select(EventListViewModel.Map).ToListAsync();
+        }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EventListViewModel>>> GetEvent([FromQuery]EventFilter filter=null)
         {
